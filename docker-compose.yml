@@ -27,7 +27,7 @@ services:
                 max-size: 10m
                 max-file: "3"
         volumes:
-            - .airflow/dags/:/usr/local/airflow/dags/
+            - ./airflow/dags/:/usr/local/airflow/dags/
         ports:
             - "8080:8080"
         healthcheck:
@@ -35,4 +35,16 @@ services:
             interval: 30s
             timeout: 30s
             retries: 3
+
+    jupyterlab:
+        build: ./jupyterlab/ 
+        container_name: jupyterlab
+        restart: always
+        environment:
+          - JUPYTER_IP="192.168.1.128" 
+          - JUPYTER_GATEWAY_URL="http://192.168.1.128:8888"
+        volumes:
+          - ./jupyterlab/:/jupyterlab/ 
+        ports:
+          - "8888:8888"
 
