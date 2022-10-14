@@ -12,36 +12,31 @@ services:
             options:
                 max-size: 10m
                 max-file: "3"
+        volumes:
+            - ./database/:/var/lib/postgresql/data/
 
     airflow:
-        image: puckel/docker-airflow:1.10.9
+        build: ./airflow/
         container_name: airflow
         restart: always
         depends_on:
             - postgres
-        environment:
-            - LOAD_EX=n
-            - EXECUTOR=Local
-        logging:
-            options:
-                max-size: 10m
-                max-file: "3"
         volumes:
             - ./airflow/dags/:/usr/local/airflow/dags/
         ports:
             - "8080:8080"
         healthcheck:
-            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+            test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
             interval: 30s
             timeout: 30s
-            retries: 3
+            retries: 5
 
     jupyterlab:
         build: ./jupyterlab/ 
         container_name: jupyterlab
         restart: always
         volumes:
-            - ./jupyterlab/:/jupyterlab/ 
+            - ./jupyterlab/scripts/:/jupyterlab/ 
         ports:
             - "6060:6060"
 
