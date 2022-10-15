@@ -14,6 +14,10 @@ services:
                 max-file: "3"
         volumes:
             - ./database/:/var/lib/postgresql/data/
+        ports:
+            - "${POSTGRES_PORT}:5432"
+        networks:
+            - mlremote
 
     airflow:
         build: ./airflow/
@@ -21,16 +25,25 @@ services:
         restart: always
         depends_on:
             - postgres
+        environment:
+            - USERNAME=${USERNAME}
+            - USER_PASSWORD=${USER_PASSWORD}
+            - USER_FIRSTNAME=${USER_FIRSTNAME}
+            - USER_LASTNAME=${USER_LASTNAME}
+            - USER_ROLE=${USER_ROLE}
+            - USER_EMAIL=${USER_EMAIL}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_HOST=${POSTGRES_HOST}
+            - POSTGRES_PORT=${POSTGRES_PORT}
         volumes:
-            - ./airflow/dags/:/usr/local/airflow/dags/
+            - ./airflow/:/root/airflow/
         ports:
-            - "8080:8080"
-        healthcheck:
-            test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
-            interval: 30s
-            timeout: 30s
-            retries: 5
-
+            - ":${AIRFLOW_PORT}:8080"
+        networks:
+            - mlremote
+ 
     jupyterlab:
         build: ./jupyterlab/ 
         container_name: jupyterlab
@@ -38,5 +51,11 @@ services:
         volumes:
             - ./jupyterlab/scripts/:/jupyterlab/ 
         ports:
-            - "6060:6060"
+            - "${JUPYTER_PORT}:6060"
+        networks:
+            - mlremote
+ 
 
+networks:
+    mlremote:
+        driver: bridge

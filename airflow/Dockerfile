@@ -1,11 +1,14 @@
-FROM python:3.9-slim
+FROM python:3.8
 
 # Create a working directory
 WORKDIR /airflow
 
-RUN pip install "apache-airflow==2.4.1" \
-	--constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.4.1/constraints-3.9.txt"
+ENV AIRFLOW_HOME=~/airflow
+ENV AIRFLOW_VERSION=2.1.1
+ENV PYTHON_VERSION=3.8
+
+RUN pip install apache-airflow==2.1.1 psycopg2-binary==2.9.1\
+	--constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.1.1/constraints-3.8.txt"
 
 EXPOSE 8080
-RUN airflow standalone
-CMD ["airflow", "standalone"]
+CMD ["airflow", "webserver"]
