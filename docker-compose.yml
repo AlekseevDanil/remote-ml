@@ -44,6 +44,7 @@ services:
         restart: always
         volumes:
             - ./jupyterlab/scripts/:/jupyterlab/ 
+            - ./airflow/dags/:/jupyterlab/dags
         ports:
             - ${JUPYTER_PORT}:6060
         networks:
