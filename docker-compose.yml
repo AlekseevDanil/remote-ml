@@ -15,7 +15,7 @@ services:
         volumes:
             - ./database/:/var/lib/postgresql/data/
         ports:
-            - "${POSTGRES_PORT}:5432"
+            - ${POSTGRES_PORT}:5432
         networks:
             - mlremote
 
@@ -26,12 +26,6 @@ services:
         depends_on:
             - postgres
         environment:
-            - USERNAME=${USERNAME}
-            - USER_PASSWORD=${USER_PASSWORD}
-            - USER_FIRSTNAME=${USER_FIRSTNAME}
-            - USER_LASTNAME=${USER_LASTNAME}
-            - USER_ROLE=${USER_ROLE}
-            - USER_EMAIL=${USER_EMAIL}
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - POSTGRES_DB=${POSTGRES_DB}
@@ -40,7 +34,7 @@ services:
         volumes:
             - ./airflow/:/root/airflow/
         ports:
-            - ":${AIRFLOW_PORT}:8080"
+            - ${AIRFLOW_PORT}:8080
         networks:
             - mlremote
  
@@ -51,7 +45,7 @@ services:
         volumes:
             - ./jupyterlab/scripts/:/jupyterlab/ 
         ports:
-            - "${JUPYTER_PORT}:6060"
+            - ${JUPYTER_PORT}:6060
         networks:
             - mlremote
  
